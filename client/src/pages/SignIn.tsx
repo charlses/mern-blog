@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import {
@@ -10,8 +11,31 @@ import {
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
+import Loader from '../components/ui/loader'
+import useSignIn from '../hooks/auth/useSignIn'
 
 const SignInPage = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+
+  const { signInUser, isPending } = useSignIn()
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const data = await signInUser({ formData, setFormData })
+    console.log(data)
+  }
+
   return (
     <main className='flex items-center justify-center min-h-[80vh] my-4'>
       <Card className='mx-auto max-w-sm'>
@@ -22,13 +46,17 @@ const SignInPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='grid gap-4'>
+          <form className='grid gap-4' onSubmit={handleSubmit}>
             <div className='grid gap-2'>
               <Label htmlFor='email'>Email</Label>
               <Input
                 id='email'
                 type='email'
+                name='email'
                 placeholder='m@example.com'
+                value={formData.email}
+                onChange={handleChange}
+                disabled={isPending}
                 required
               />
             </div>
@@ -46,16 +74,20 @@ const SignInPage = () => {
                 id='password'
                 type='password'
                 placeholder='* * * * * *'
+                name='password'
+                value={formData.password}
+                onChange={handleChange}
+                disabled={isPending}
                 required
               />
             </div>
-            <Button type='submit' className='w-full'>
-              Login
+            <Button type='submit' className='w-full' disabled={isPending}>
+              {isPending ? <Loader /> : 'Sign in'}
             </Button>
             <Button variant='outline' className='w-full'>
               Login with Google
             </Button>
-          </div>
+          </form>
           <div className='mt-4 text-center text-sm'>
             Don&apos;t have an account?{' '}
             <Link to='/sign-up' className='underline'>

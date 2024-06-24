@@ -36,7 +36,7 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    signUpUser({ formData, setFormData })
+    await signUpUser({ formData, setFormData })
   }
 
   return (

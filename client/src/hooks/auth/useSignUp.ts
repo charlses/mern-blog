@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 
 interface FormData {
   firstname: string
@@ -16,6 +17,7 @@ interface SignUpUserProps {
 
 const useSignUp = () => {
   const [isPending, setIsPending] = useState(false)
+  const navigate = useNavigate()
 
   const signUpUser = async ({ formData, setFormData }: SignUpUserProps) => {
     setIsPending(true)
@@ -70,19 +72,21 @@ const useSignUp = () => {
           description:
             'An email confirmation was sent to your email, please confirm it to access your account!'
         })
+        setFormData({
+          firstname: '',
+          lastname: '',
+          email: '',
+          password: '',
+          confirmPassword: ''
+        })
+        setIsPending(false)
+        navigate('/sign-in', { replace: true })
+        return data.data
       }
     } catch (error) {
       console.error(error)
       toast.error('Something went wrong', { description: `${error}` })
     }
-    setFormData({
-      firstname: '',
-      lastname: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    })
-    setIsPending(false)
   }
 
   return { signUpUser, isPending }

@@ -22,11 +22,22 @@ mongoose
   })
 
 const app = express()
-app.use(express.json())
 
+app.use(express.json())
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
 })
 
 app.use('/api', UserRoute)
 app.use('/api/auth', AuthRoute)
+
+// middleware
+app.use((err, req, res, next) => {
+  const statusCode = err.status || 500
+  const message = err.message || 'Internal Server Error'
+  res.status(statusCode).json({
+    success: false,
+    status: statusCode,
+    message: message
+  })
+})

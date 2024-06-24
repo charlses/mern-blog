@@ -26,7 +26,7 @@ import {
   Menu,
   Search,
   CircleUser,
-  DoorOpen,
+  LogInIcon,
   Newspaper,
   ChevronDown
 } from 'lucide-react'
@@ -177,15 +177,15 @@ const Header = () => {
               <Link to='/sign-in' className=''>
                 <Button
                   variant='outline'
-                  className='flex gap-2 items-start justify-start w-full -ml-4'
+                  className='flex gap-2 items-center justify-start w-full -ml-4 font-extralight'
                 >
-                  <DoorOpen className='w-6 h-6 font-extralight' />
+                  <LogInIcon className='w-5 h-5' />
                   Sign in
                 </Button>
               </Link>
               <Link to='/sign-up' className=''>
-                <Button className='flex gap-2 items-start justify-start w-full -ml-4 '>
-                  <Newspaper className='w-6 h-6 font-extralight' />
+                <Button className='flex gap-2 items-start justify-start w-full -ml-4 font-extralight'>
+                  <Newspaper className='w-5 h-5' />
                   Sign up
                 </Button>
               </Link>
@@ -230,9 +230,9 @@ const Header = () => {
           <Link to='/sign-in' className='hidden md:block'>
             <Button
               variant='outline'
-              className='flex gap-2 items-center justify-center'
+              className='flex gap-2 items-center justify-center font-extralight'
             >
-              <DoorOpen className='w-6 h-6 font-extralight' />
+              <LogInIcon className='w-5 h-5' />
               Sign in
             </Button>
           </Link>

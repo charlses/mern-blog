@@ -14,6 +14,7 @@ import { Button } from '../components/ui/button'
 
 //sign up hook
 import useSignUp from '../hooks/auth/useSignUp'
+import Loader from '../components/ui/loader'
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -115,14 +116,7 @@ const SignUpPage = () => {
               />
             </div>
             <Button type='submit' className='w-full' disabled={isPending}>
-              {isPending ? (
-                <div className='flex justify-center items-center gap-4'>
-                  <div className='animate-spin rounded-full h-6 w-6 border-t-2 border-b-2'></div>
-                  <p>Loading...</p>
-                </div>
-              ) : (
-                'Create an account'
-              )}
+              {isPending ? <Loader /> : 'Create an account'}
             </Button>
             <Button variant='outline' className='w-full' type='button'>
               Sign up with GitHub

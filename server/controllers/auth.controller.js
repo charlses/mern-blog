@@ -1,6 +1,7 @@
 import User from '../models/user.model.js'
 import bcrypt from 'bcryptjs'
 import { errorHandler } from '../utils/error.js'
+import jwt from 'jsonwebtoken'
 
 export const signUp = async (req, res, next) => {
   const { firstname, lastname, email, password } = req.body
@@ -39,5 +40,54 @@ export const signUp = async (req, res, next) => {
       .json({ message: 'User created successfully!', data: newUser })
   } catch (error) {
     next(error)
+  }
+}
+
+export const signIn = async (req, res, next) => {
+  const { email, password } = req.body
+
+  if (!email || !password || email === '' || password === '') {
+    return next(errorHandler(400, 'All fields are required'))
+  }
+
+  try {
+    const existingUser = await User.findOne({ email: email.toLowerCase() })
+
+    if (!existingUser) {
+      return next(errorHandler(400, 'User does not exist'))
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    )
+
+    if (!isPasswordCorrect) {
+      return next(errorHandler(400, 'Invalid credentials'))
+    }
+
+    const token = jwt.sign(
+      {
+        userId: existingUser._id,
+        email: existingUser.email,
+        role: existingUser.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    )
+
+    res
+      .status(200)
+      .cookie('access_token', token, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 3600000
+      })
+      .json({
+        message: 'User signed in successfully',
+        data: { ...existingUser._doc, password: '' }
+      })
+  } catch (error) {
+    return next(error)
   }
 }

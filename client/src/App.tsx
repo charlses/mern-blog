@@ -1,21 +1,23 @@
-import { Button } from './components/ui/button'
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import HomePage from './pages/Home'
+import ProjectsPage from './pages/Projects'
+import DashboardPage from './pages/Dashboard'
+import SignUpPage from './pages/SignUp'
+import SignInPage from './pages/SignIn'
+import AboutPage from './pages/About'
 
 const App = () => {
-  const [counter, setCounter] = useState(0)
-
-  const increment = () => setCounter((prev) => prev + 1)
-  const decrement = () => setCounter((prev) => prev - 1)
   return (
-    <div>
-      <Button variant='outline' onClick={increment}>
-        +
-      </Button>
-      {counter}
-      <Button variant='outline' onClick={decrement}>
-        -
-      </Button>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/about' element={<AboutPage />} />
+        <Route path='/projects' element={<ProjectsPage />} />
+        <Route path='/sign-up' element={<SignUpPage />} />
+        <Route path='/sign-in' element={<SignInPage />} />
+        <Route path='/dashboard' element={<DashboardPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

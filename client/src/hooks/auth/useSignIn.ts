@@ -1,6 +1,12 @@
-import { useState } from 'react'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure
+} from '../../context/user/userSlice'
+import { RootState } from '../../context/store'
 
 interface FormData {
   email: string
@@ -13,17 +19,20 @@ interface SignInUserProps {
 }
 
 const useSignIn = () => {
-  const [isPending, setIsPending] = useState(false)
+  const { isPending, error: errorMessage } = useSelector(
+    (state: RootState) => state.user
+  )
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const signInUser = async ({ formData, setFormData }: SignInUserProps) => {
-    setIsPending(true)
+    dispatch(signInStart())
 
     if (!formData.email || !formData.password) {
       toast.error('All fields are required', {
         description: 'Please fill out all the fields!'
       })
-      setIsPending(false)
+      dispatch(signInFailure('All fields are required'))
       return
     }
 
@@ -41,7 +50,7 @@ const useSignIn = () => {
         toast.error(data.message, {
           description: 'Please try again'
         })
-        setIsPending(false)
+        dispatch(signInFailure(data.message))
         return
       } else {
         toast.success(`${data.message}`, {
@@ -51,18 +60,17 @@ const useSignIn = () => {
           email: '',
           password: ''
         })
-        setIsPending(false)
         navigate('/dashboard', { replace: true })
+        dispatch(signInSuccess(data.data))
         return data.data
       }
     } catch (error) {
-      console.error(error)
+      dispatch(signInFailure(error))
       toast.error('Something went wrong', { description: `${error}` })
     }
-    setIsPending(false)
   }
 
-  return { signInUser, isPending }
+  return { signInUser, isPending, errorMessage }
 }
 
 export default useSignIn

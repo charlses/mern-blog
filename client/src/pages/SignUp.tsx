@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import {
@@ -11,10 +12,30 @@ import { Label } from '../components/ui/label'
 import { Input } from '../components/ui/input'
 import { Button } from '../components/ui/button'
 
+//sign up hook
+import useSignUp from '../hooks/auth/useSignUp'
+
 const SignUpPage = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+  const { signUpUser, isPending } = useSignUp()
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('sign-up form submitted')
+    signUpUser({ formData, setFormData })
   }
 
   return (
@@ -31,11 +52,27 @@ const SignUpPage = () => {
             <div className='grid grid-cols-2 gap-4'>
               <div className='grid gap-2'>
                 <Label htmlFor='first-name'>First name</Label>
-                <Input id='first-name' placeholder='Max' required />
+                <Input
+                  id='first-name'
+                  name='firstname'
+                  placeholder='Max'
+                  value={formData.firstname}
+                  onChange={handleChange}
+                  disabled={isPending}
+                  required
+                />
               </div>
               <div className='grid gap-2'>
                 <Label htmlFor='last-name'>Last name</Label>
-                <Input id='last-name' placeholder='Robinson' required />
+                <Input
+                  id='last-name'
+                  placeholder='Robinson'
+                  name='lastname'
+                  value={formData.lastname}
+                  onChange={handleChange}
+                  disabled={isPending}
+                  required
+                />
               </div>
             </div>
             <div className='grid gap-2'>
@@ -44,6 +81,10 @@ const SignUpPage = () => {
                 id='email'
                 type='email'
                 placeholder='m@example.com'
+                name='email'
+                value={formData.email}
+                onChange={handleChange}
+                disabled={isPending}
                 required
               />
             </div>
@@ -53,6 +94,10 @@ const SignUpPage = () => {
                 id='password'
                 type='password'
                 placeholder='* * * * * *'
+                name='password'
+                value={formData.password}
+                onChange={handleChange}
+                disabled={isPending}
                 required
               />
             </div>
@@ -62,10 +107,14 @@ const SignUpPage = () => {
                 id='confirm-password'
                 type='password'
                 placeholder='* * * * * *'
+                name='confirmPassword'
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                disabled={isPending}
                 required
               />
             </div>
-            <Button type='submit' className='w-full'>
+            <Button type='submit' className='w-full' disabled={isPending}>
               Create an account
             </Button>
             <Button variant='outline' className='w-full' type='button'>

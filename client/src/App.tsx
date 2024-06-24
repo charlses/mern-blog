@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 //Theme context
 import { ThemeProvider } from './components/theme/theme-provider'
+
 //Pages
 import HomePage from './pages/Home'
 import ProjectsPage from './pages/Projects'
@@ -17,6 +18,7 @@ import ProfilePage from './pages/Profile'
 //Global components
 import Header from './components/Header'
 import SettingsPage from './pages/Settings'
+import { Toaster } from './components/ui/sonner'
 
 const App = () => {
   return (
@@ -38,6 +40,7 @@ const App = () => {
           <Route path='/profile' element={<ProfilePage />} />
           <Route path='/settings' element={<SettingsPage />} />
         </Routes>
+        <Toaster />
       </ThemeProvider>
     </BrowserRouter>
   )

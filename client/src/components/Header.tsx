@@ -1,7 +1,13 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 //ShadcnUI components
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+  SheetDescription
+} from './ui/sheet'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import {
@@ -15,10 +21,19 @@ import {
 import { ModeToggle } from './theme/mode-toggle'
 
 //Icons
-import { Package2, Menu, Search, CircleUser, DoorOpen } from 'lucide-react'
+import {
+  Package2,
+  Menu,
+  Search,
+  CircleUser,
+  DoorOpen,
+  Newspaper,
+  ChevronDown
+} from 'lucide-react'
 
 const Header = () => {
   const isAuthed = false
+  const path = useLocation().pathname
 
   return (
     <header className='sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6'>
@@ -32,31 +47,41 @@ const Header = () => {
         </Link>
         <Link
           to='/about'
-          className='text-foreground transition-colors hover:text-foreground'
+          className={` transition-colors hover:text-foreground ${
+            path === '/about' ? 'text-foreground' : 'text-muted-foreground'
+          }`}
         >
           About
         </Link>
         <Link
           to='/projects'
-          className='text-muted-foreground transition-colors hover:text-foreground'
+          className={`transition-colors hover:text-foreground ${
+            path === '/projects' ? 'text-foreground' : 'text-muted-foreground '
+          }`}
         >
           Projects
         </Link>
         <Link
           to='/blog'
-          className='text-muted-foreground transition-colors hover:text-foreground'
+          className={`transition-colors hover:text-foreground ${
+            path === '/blog' ? 'text-foreground' : 'text-muted-foreground'
+          }`}
         >
           Blog
         </Link>
         <Link
           to='/contact'
-          className='text-muted-foreground transition-colors hover:text-foreground'
+          className={`transition-colors hover:text-foreground ${
+            path === '/contact' ? 'text-foreground' : 'text-muted-foreground '
+          }`}
         >
           Contact
         </Link>
         <Link
           to='/services'
-          className='text-muted-foreground transition-colors hover:text-foreground'
+          className={`transition-colors hover:text-foreground ${
+            path === '/services' ? 'text-foreground' : 'text-muted-foreground '
+          }`}
         >
           Services
         </Link>
@@ -75,41 +100,96 @@ const Header = () => {
               className='flex items-center gap-2 text-lg font-semibold'
             >
               <Package2 className='h-6 w-6' />
-              <span className='sr-only'>Acme Inc</span>
+              <span className='sr-only'>
+                <SheetDescription>Acme Inc</SheetDescription>
+              </span>
             </Link>
-            <Link to='/' className='hover:text-foreground'>
+
+            <SheetTitle>
+              <div className='flex my-2 border-b items-center justify-start py-2 gap-2'>
+                <div className='bg-muted-foreground h-12 w-12 rounded-full flex items-center justify-center'>
+                  DT
+                </div>
+                <div className='flex flex-col'>
+                  <h3>Davit Tavadze</h3>
+                  <p className='font-extralight text-xs'>
+                    Check out your profile
+                  </p>
+                </div>
+                <ChevronDown className='ml-4' />
+              </div>
+            </SheetTitle>
+            <Link
+              to='/'
+              className={`hover:text-foreground ${
+                path === '/' ? 'text-foreground' : 'text-muted-foreground'
+              }`}
+            >
               Home
             </Link>
             <Link
               to='/about'
-              className='text-muted-foreground hover:text-foreground'
+              className={`hover:text-foreground ${
+                path === '/about' ? 'text-foreground' : 'text-muted-foreground'
+              }`}
             >
               About Us
             </Link>
             <Link
               to='/projects'
-              className='text-muted-foreground hover:text-foreground'
+              className={`hover:text-foreground ${
+                path === '/projects'
+                  ? 'text-foreground'
+                  : 'text-muted-foreground'
+              }`}
             >
               Projects
             </Link>
             <Link
               to='/blog'
-              className='text-muted-foreground hover:text-foreground'
+              className={`hover:text-foreground ${
+                path === '/blog' ? 'text-foreground' : 'text-muted-foreground'
+              }`}
             >
               Blog
             </Link>
             <Link
               to='/contact'
-              className='text-muted-foreground hover:text-foreground'
+              className={`hover:text-foreground ${
+                path === '/contact'
+                  ? 'text-foreground'
+                  : 'text-muted-foreground'
+              }`}
             >
               Contact
             </Link>
             <Link
               to='/services'
-              className='text-muted-foreground hover:text-foreground'
+              className={`hover:text-foreground ${
+                path === '/services'
+                  ? 'text-foreground'
+                  : 'text-muted-foreground'
+              }`}
             >
               Services
             </Link>
+            <div className='flex flex-col gap-2'>
+              <Link to='/sign-in' className=''>
+                <Button
+                  variant='outline'
+                  className='flex gap-2 items-start justify-start w-full -ml-4'
+                >
+                  <DoorOpen className='w-6 h-6 font-extralight' />
+                  Sign in
+                </Button>
+              </Link>
+              <Link to='/sign-up' className=''>
+                <Button className='flex gap-2 items-start justify-start w-full -ml-4 '>
+                  <Newspaper className='w-6 h-6 font-extralight' />
+                  Sign up
+                </Button>
+              </Link>
+            </div>
           </nav>
         </SheetContent>
       </Sheet>

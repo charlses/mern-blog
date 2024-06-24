@@ -147,7 +147,7 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Link to='/sign-in'>
+          <Link to='/sign-in' className='hidden md:block'>
             <Button
               variant='outline'
               className='flex gap-2 items-center justify-center'

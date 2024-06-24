@@ -115,7 +115,14 @@ const SignUpPage = () => {
               />
             </div>
             <Button type='submit' className='w-full' disabled={isPending}>
-              Create an account
+              {isPending ? (
+                <div className='flex justify-center items-center gap-4'>
+                  <div className='animate-spin rounded-full h-6 w-6 border-t-2 border-b-2'></div>
+                  <p>Loading...</p>
+                </div>
+              ) : (
+                'Create an account'
+              )}
             </Button>
             <Button variant='outline' className='w-full' type='button'>
               Sign up with GitHub

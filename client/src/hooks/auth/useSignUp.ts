@@ -63,6 +63,8 @@ const useSignUp = () => {
           description:
             'The email you are trying to sign up with is already in use!'
         })
+        setIsPending(false)
+        return
       } else {
         toast.success(`${data.message}`, {
           description:
@@ -72,16 +74,15 @@ const useSignUp = () => {
     } catch (error) {
       console.error(error)
       toast.error('Something went wrong', { description: `${error}` })
-    } finally {
-      setFormData({
-        firstname: '',
-        lastname: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      })
-      setIsPending(false)
     }
+    setFormData({
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    })
+    setIsPending(false)
   }
 
   return { signUpUser, isPending }

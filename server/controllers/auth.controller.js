@@ -17,7 +17,7 @@ export const signUp = async (req, res, next) => {
     return next(errorHandler(400, 'All fields are required'))
   }
 
-  const existingUser = await User.findOne({ email })
+  const existingUser = await User.findOne({ email: email.toLowerCase() })
 
   if (existingUser) {
     return next(errorHandler(400, 'User already exists'))
@@ -29,7 +29,7 @@ export const signUp = async (req, res, next) => {
     const newUser = await new User({
       firstname,
       lastname,
-      email,
+      email: email.toLowerCase(),
       password: hashedPassword
     })
 

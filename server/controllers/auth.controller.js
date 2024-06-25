@@ -91,3 +91,58 @@ export const signIn = async (req, res, next) => {
     return next(error)
   }
 }
+
+export const googleAuth = async (req, res, next) => {
+  const { name, email, image } = req.body
+  console.log('Received data:', { name, email, image }) // Added log
+  try {
+    const existingUser = await User.findOne({ email: email.toLowerCase() })
+
+    if (existingUser) {
+      const token = jwt.sign(
+        {
+          userId: existingUser._id,
+          email: existingUser.email,
+          role: existingUser.role
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      )
+
+      res
+        .status(200)
+        .cookie('access_token', token, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 3600000
+        })
+        .json({
+          success: true,
+          message: 'User signed in successfully',
+          data: { ...existingUser._doc, password: '' }
+        })
+    } else {
+      const generatedPassword = Math.random().toString(36).slice(-8)
+      const hashedPassword = await bcrypt.hash(generatedPassword, 12)
+
+      const newUser = new User({
+        firstname: name.split(' ')[0],
+        lastname: name.split(' ')[1],
+        email: email.toLowerCase(),
+        password: hashedPassword,
+        image: image
+      })
+
+      await newUser.save()
+      res.status(201).json({
+        success: true,
+        message: 'User created successfully!',
+        data: newUser
+      })
+    }
+  } catch (error) {
+    console.log('Error during Google Auth:', error) // Added log
+    res.status(500).json({ success: false, message: 'Internal server error' })
+    next(error)
+  }
+}

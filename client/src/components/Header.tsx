@@ -25,15 +25,19 @@ import {
   Package2,
   Menu,
   Search,
-  CircleUser,
   LogInIcon,
   Newspaper,
-  ChevronDown
+  ChevronDown,
+  LogOutIcon
 } from 'lucide-react'
 
+import { useSelector } from 'react-redux'
+import { RootState } from '../context/store'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+
 const Header = () => {
-  const isAuthed = false
   const path = useLocation().pathname
+  const { currentUser } = useSelector((state: RootState) => state.user)
 
   return (
     <header className='sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6'>
@@ -205,25 +209,64 @@ const Header = () => {
           </div>
         </form>
         <ModeToggle />
-        {isAuthed ? (
+        {currentUser ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant='secondary' size='icon' className='rounded-full'>
-                <CircleUser className='h-5 w-5' />
+                <Avatar>
+                  <AvatarImage
+                    src={currentUser.image || ''}
+                    alt='Profile Image'
+                  />
+                  <AvatarFallback>
+                    {currentUser.firstname[0]}
+                    {currentUser.lastname[0]}
+                  </AvatarFallback>
+                </Avatar>
                 <span className='sr-only'>Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>
-                <Link to='/profile'>My Account</Link>
+                <Link to='/profile'>
+                  <DropdownMenuItem>
+                    <div className='flex items-center justify-center gap-3'>
+                      <Avatar>
+                        <AvatarImage
+                          src={currentUser.image || ''}
+                          alt='Profile Image'
+                        />
+                        <AvatarFallback>
+                          {currentUser.firstname[0]}
+                          {currentUser.lastname[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className='flex flex-col items-start justify-center h-full'>
+                        <p>
+                          {currentUser.firstname} {currentUser.lastname}
+                        </p>
+                        <p className='font-extralight text-muted-foreground text-xs'>
+                          {currentUser.email}
+                        </p>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                </Link>
               </DropdownMenuLabel>
+              <Link to='/dashboard'>
+                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              </Link>
+              <Link to='/dashboard/settings'>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+              </Link>
+              <Link to='/support'>
+                <DropdownMenuItem>Support</DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link to='/settings'>Settings</Link>
+              <DropdownMenuItem className='flex gap-2 font-extralight'>
+                <LogOutIcon className='h-5 w-5' />
+                Logout
               </DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (

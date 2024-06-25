@@ -13,6 +13,10 @@ import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import Loader from '../components/ui/loader'
 import useSignIn from '../hooks/auth/useSignIn'
+import Oauth from '../components/Oauth'
+
+import { useSelector } from 'react-redux'
+import { RootState } from '../context/store'
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +24,8 @@ const SignInPage = () => {
     password: ''
   })
 
-  const { signInUser, isPending } = useSignIn()
+  const { signInUser } = useSignIn()
+  const { isPending } = useSelector((state: RootState) => state.user)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -84,9 +89,7 @@ const SignInPage = () => {
             <Button type='submit' className='w-full' disabled={isPending}>
               {isPending ? <Loader /> : 'Sign in'}
             </Button>
-            <Button variant='outline' className='w-full'>
-              Login with Google
-            </Button>
+            <Oauth title='Login with Google' />
           </form>
           <div className='mt-4 text-center text-sm'>
             Don&apos;t have an account?{' '}

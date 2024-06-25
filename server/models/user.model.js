@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: 'user'
     },
+    image: {
+      type: String,
+      default: 'https://avatars.pfptown.com/830/rick-and-morty-pfp-4857.png'
+    },
     createdAt: {
       type: Date,
       default: Date.now()

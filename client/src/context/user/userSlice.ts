@@ -1,6 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-const initialState = {
+// Define interface for user state
+interface UserState {
+  currentUser: {
+    firstname: string
+    lastname: string
+    email: string
+    role: string // Adjust the type according to your data structure
+    image: string | null // Adjust the type according to your data structure
+  } | null
+  error: string | null
+  isPending: boolean
+}
+
+const initialState: UserState = {
   currentUser: null,
   error: null,
   isPending: false
@@ -14,12 +27,12 @@ const userSlice = createSlice({
       state.isPending = true
       state.error = null
     },
-    signInSuccess: (state, action) => {
+    signInSuccess: (state, action: PayloadAction<UserState['currentUser']>) => {
       state.isPending = false
       state.currentUser = action.payload
       state.error = null
     },
-    signInFailure: (state, action) => {
+    signInFailure: (state, action: PayloadAction<string>) => {
       state.isPending = false
       state.error = action.payload
       state.currentUser = null

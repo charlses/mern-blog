@@ -15,6 +15,10 @@ import { Button } from '../components/ui/button'
 //sign up hook
 import useSignUp from '../hooks/auth/useSignUp'
 import Loader from '../components/ui/loader'
+import Oauth from '../components/Oauth'
+
+import { useSelector } from 'react-redux'
+import { RootState } from '../context/store'
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +28,8 @@ const SignUpPage = () => {
     password: '',
     confirmPassword: ''
   })
-  const { signUpUser, isPending } = useSignUp()
+  const { signUpUser } = useSignUp()
+  const { isPending } = useSelector((state: RootState) => state.user)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -118,9 +123,7 @@ const SignUpPage = () => {
             <Button type='submit' className='w-full' disabled={isPending}>
               {isPending ? <Loader /> : 'Create an account'}
             </Button>
-            <Button variant='outline' className='w-full' type='button'>
-              Sign up with GitHub
-            </Button>
+            <Oauth title='Continue with google' />
           </form>
           <div className='mt-4 text-center text-sm'>
             Already have an account?{' '}

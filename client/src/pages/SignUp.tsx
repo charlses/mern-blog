@@ -45,7 +45,7 @@ const SignUpPage = () => {
   }
 
   return (
-    <main className='flex items-center justify-center min-h-[80vh] my-4'>
+    <main className='flex items-center justify-center min-h-[80vh] my-16 mx-4'>
       <Card className='mx-auto max-w-sm'>
         <CardHeader>
           <CardTitle className='text-xl'>Sign Up</CardTitle>

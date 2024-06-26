@@ -20,6 +20,7 @@ import Header from './components/Header'
 import SettingsPage from './pages/Settings'
 import { Toaster } from './components/ui/sonner'
 import PrivateRoute from './context/private/PrivateRoute'
+import PublicRoute from './context/public/PublicRoute'
 
 const App = () => {
   return (
@@ -35,12 +36,14 @@ const App = () => {
           <Route path='/services' element={<ServicesPage />} />
 
           {/* Authentication pages */}
-          <Route path='/sign-up' element={<SignUpPage />} />
-          <Route path='/sign-in' element={<SignInPage />} />
+          <Route element={<PublicRoute />}>
+            <Route path='/sign-up' element={<SignUpPage />} />
+            <Route path='/sign-in' element={<SignInPage />} />
+          </Route>
           <Route element={<PrivateRoute />}>
             <Route path='/dashboard' element={<DashboardPage />} />
-            <Route path='/profile' element={<ProfilePage />} />
-            <Route path='/settings' element={<SettingsPage />} />
+            <Route path='/dashboard/profile' element={<ProfilePage />} />
+            <Route path='/dashboard/settings' element={<SettingsPage />} />
           </Route>
         </Routes>
         <Toaster />

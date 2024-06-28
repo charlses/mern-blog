@@ -28,15 +28,14 @@ const App = () => {
       <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
         <Header />
         <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/about' element={<AboutPage />} />
-          <Route path='/projects' element={<ProjectsPage />} />
-          <Route path='/blog' element={<BlogPage />} />
-          <Route path='/contact' element={<ContactPage />} />
-          <Route path='/services' element={<ServicesPage />} />
-
           {/* Authentication pages */}
           <Route element={<PublicRoute />}>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/about' element={<AboutPage />} />
+            <Route path='/projects' element={<ProjectsPage />} />
+            <Route path='/blog' element={<BlogPage />} />
+            <Route path='/contact' element={<ContactPage />} />
+            <Route path='/services' element={<ServicesPage />} />
             <Route path='/sign-up' element={<SignUpPage />} />
             <Route path='/sign-in' element={<SignInPage />} />
           </Route>

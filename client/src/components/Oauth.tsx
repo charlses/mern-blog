@@ -1,12 +1,25 @@
-import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
+import { useEffect } from 'react'
+
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  getAuth,
+  GithubAuthProvider
+} from 'firebase/auth'
+
+//components
 import { app } from '../firebase'
 import { Button } from './ui/button'
+import { toast } from 'sonner'
+
+//State
 import { useDispatch } from 'react-redux'
 import { signInFailure, signInSuccess } from '../context/user/userSlice'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
 
-const Oauth = ({ title }: { title: string }) => {
+const Oauth = ({ google, github }: { google: string; github: string }) => {
   const dispatch = useDispatch()
   const auth = getAuth(app)
   const navigate = useNavigate()
@@ -54,14 +67,66 @@ const Oauth = ({ title }: { title: string }) => {
       }
     } catch (error) {
       console.error('Error during Google Auth:', error) // Log error
-      dispatch(signInFailure(error))
+      dispatch(signInFailure(error as any))
+    }
+  }
+
+  // Sign in with github
+  const handleGithubAuth = async () => {
+    const githubProvider = new GithubAuthProvider()
+
+    githubProvider.setCustomParameters({
+      prompt: 'select_account'
+    })
+    try {
+      const resultsFromGithub = await signInWithPopup(auth, githubProvider)
+
+      const userData = {
+        name: resultsFromGithub.user.displayName,
+        email: resultsFromGithub.user.email,
+        image: resultsFromGithub.user.photoURL
+      }
+
+      console.log('User data to be sent to backend:', userData) // Log user data
+      const res = await fetch('/api/auth/github', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      })
+
+      const data = await res.json()
+
+      console.log('Response from backend:', data) // Log backend response
+
+      if (data.success === false) {
+        toast.error(data.message, { description: 'Please try again!' })
+      } else {
+        toast.success(`${data.message}`, {
+          description: 'Signed in successfully!'
+        })
+
+        dispatch(signInSuccess(data.data))
+
+        navigate('/dashboard', { replace: true })
+      }
+    } catch (error) {
+      console.error('Error during Google Auth:', error) // Log error
+
+      dispatch(signInFailure(error as any))
     }
   }
 
   return (
-    <Button variant='outline' className='w-full' onClick={handleGoogleAuth}>
-      {title}
-    </Button>
+    <div className='flex flex-col gap-2'>
+      <Button variant='outline' className='w-full' onClick={handleGoogleAuth}>
+        {google}
+      </Button>
+      <Button variant='secondary' className='w-full' onClick={handleGithubAuth}>
+        {github}
+      </Button>
+    </div>
   )
 }
 

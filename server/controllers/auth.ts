@@ -50,7 +50,7 @@ export const signUp = async (
       .status(201)
       .json({ message: 'User created successfully!', data: newUser })
   } catch (error) {
-    next(error)
+    next(errorHandler(500, 'Internal Server Error'))
   }
 }
 
@@ -101,7 +101,7 @@ export const signIn = async (
         data: { ...existingUser, password: '' }
       })
   } catch (error) {
-    next(error)
+    next(errorHandler(500, 'Internal Server Error'))
   }
 }
 
@@ -137,7 +137,7 @@ export const googleAuth = async (
         .json({
           success: true,
           message: 'User signed in successfully',
-          data: { ...existingUser, password: '' }
+          data: { ...existingUser._doc, password: '' }
         })
     } else {
       const generatedPassword = Math.random().toString(36).slice(-8)
@@ -152,15 +152,112 @@ export const googleAuth = async (
       })
 
       await newUser.save()
-      res.status(201).json({
-        success: true,
-        message: 'User created successfully!',
-        data: newUser
-      })
+      const token = jwt.sign(
+        {
+          userId: newUser._id,
+          email: newUser.email,
+          role: newUser.role
+        },
+        JWT_SECRET!,
+        { expiresIn: '1h' }
+      )
+
+      res
+        .status(200)
+        .cookie('access_token', token, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 3600000
+        })
+        .json({
+          success: true,
+          message: 'User signed in successfully',
+          data: { ...newUser._doc, password: '' }
+        })
     }
   } catch (error) {
     console.log('Error during Google Auth:', error)
     res.status(500).json({ success: false, message: 'Internal server error' })
-    next(error)
+    next(errorHandler(500, 'Internal Server Error'))
+  }
+}
+
+export const githubAuth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { name, email, image } = req.body
+  console.log('Received data:', { name, email, image })
+
+  try {
+    const existingUser = await User.findOne({ email: email.toLowerCase() })
+
+    if (existingUser) {
+      const token = jwt.sign(
+        {
+          userId: existingUser._id,
+          email: existingUser.email,
+          role: existingUser.role
+        },
+        JWT_SECRET!,
+        { expiresIn: '1h' }
+      )
+
+      res
+        .status(200)
+        .cookie('access_token', token, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 3600000
+        })
+        .json({
+          success: true,
+          message: 'User signed in successfully',
+          data: { ...existingUser._doc, password: '' }
+        })
+    } else {
+      const generatedPassword = Math.random().toString(36).slice(-8)
+
+      const hashedPassword = await bcrypt.hash(generatedPassword, 12)
+
+      // Creating a new user if none exists in the database
+      const newUser = new User({
+        firstname: name.split(' ')[0] || name,
+        lastname: name.split(' ')[1] || name,
+        email: email.toLowerCase(),
+        password: hashedPassword,
+        image
+      })
+
+      await newUser.save()
+
+      // Signing the new user with jwt token
+      const token = jwt.sign(
+        {
+          userId: newUser._id,
+          email: newUser.email,
+          role: newUser.role
+        },
+        JWT_SECRET!,
+        { expiresIn: '1h' }
+      )
+      //sending response with access_token cookie
+      res
+        .status(200)
+        .cookie('access_token', token, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 3600000
+        })
+        .json({
+          success: true,
+          message: 'User signed in successfully',
+          data: { ...newUser._doc, password: '' }
+        })
+    }
+  } catch (error) {
+    console.log('Error during Github Auth:', error)
+    next(errorHandler(500, 'Internal Server Error'))
   }
 }

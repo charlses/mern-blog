@@ -123,7 +123,10 @@ const SignUpPage = () => {
             <Button type='submit' className='w-full' disabled={isPending}>
               {isPending ? <Loader /> : 'Create an account'}
             </Button>
-            <Oauth title='Continue with google' />
+            <Oauth
+              google='Continue with google'
+              github='Continue with GitHub'
+            />
           </form>
           <div className='mt-4 text-center text-sm'>
             Already have an account?{' '}

@@ -80,7 +80,7 @@ const Header = () => {
       {currentUser && (
         <div className='hidden flex-col gap-6 text-lg font-medium sm:flex sm:flex-row sm:items-center sm:gap-5 sm:text-sm lg:gap-6'>
           <Link
-            to='/'
+            to='/dashboard'
             className='flex items-center gap-2 text-lg font-semibold md:text-base'
           >
             <Package2 className='h-6 w-6' />

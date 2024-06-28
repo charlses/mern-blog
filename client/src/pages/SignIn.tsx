@@ -89,7 +89,7 @@ const SignInPage = () => {
             <Button type='submit' className='w-full' disabled={isPending}>
               {isPending ? <Loader /> : 'Sign in'}
             </Button>
-            <Oauth title='Login with Google' />
+            <Oauth google='Sign in with Google' github='Sign in with GitHub' />
           </form>
           <div className='mt-4 text-center text-sm'>
             Don&apos;t have an account?{' '}

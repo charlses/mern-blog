@@ -1,33 +1,44 @@
-import User from '../models/user.model.js'
+import { Request, Response, NextFunction } from 'express'
+import User from '@models/user'
 import bcrypt from 'bcryptjs'
-import { errorHandler } from '../utils/error.js'
+import { errorHandler } from '@utils/error'
 import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
 
-export const signUp = async (req, res, next) => {
-  const { firstname, lastname, email, password } = req.body
-  if (
-    !firstname ||
-    !lastname ||
-    !email ||
-    !password ||
-    firstname === '' ||
-    lastname === '' ||
-    email === '' ||
-    password === ''
-  ) {
+dotenv.config()
+
+const { JWT_SECRET } = process.env
+
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is not defined in the environment variables.')
+}
+
+interface AuthRequestBody {
+  firstname?: string
+  lastname?: string
+  email: string
+  password: string
+}
+
+export const signUp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { firstname, lastname, email, password } = req.body as AuthRequestBody
+
+  if (!firstname || !lastname || !email || !password) {
     return next(errorHandler(400, 'All fields are required'))
   }
 
-  const existingUser = await User.findOne({ email: email.toLowerCase() })
-
-  if (existingUser) {
-    return next(errorHandler(400, 'User already exists'))
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 12)
-
   try {
-    const newUser = await new User({
+    const existingUser = await User.findOne({ email: email.toLowerCase() })
+    if (existingUser) {
+      return next(errorHandler(400, 'User already exists'))
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+    const newUser = new User({
       firstname,
       lastname,
       email: email.toLowerCase(),
@@ -43,16 +54,19 @@ export const signUp = async (req, res, next) => {
   }
 }
 
-export const signIn = async (req, res, next) => {
-  const { email, password } = req.body
+export const signIn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email, password } = req.body as AuthRequestBody
 
-  if (!email || !password || email === '' || password === '') {
+  if (!email || !password) {
     return next(errorHandler(400, 'All fields are required'))
   }
 
   try {
     const existingUser = await User.findOne({ email: email.toLowerCase() })
-
     if (!existingUser) {
       return next(errorHandler(400, 'User does not exist'))
     }
@@ -61,7 +75,6 @@ export const signIn = async (req, res, next) => {
       password,
       existingUser.password
     )
-
     if (!isPasswordCorrect) {
       return next(errorHandler(400, 'Invalid credentials'))
     }
@@ -72,7 +85,7 @@ export const signIn = async (req, res, next) => {
         email: existingUser.email,
         role: existingUser.role
       },
-      process.env.JWT_SECRET,
+      JWT_SECRET!,
       { expiresIn: '1h' }
     )
 
@@ -85,16 +98,21 @@ export const signIn = async (req, res, next) => {
       })
       .json({
         message: 'User signed in successfully',
-        data: { ...existingUser._doc, password: '' }
+        data: { ...existingUser, password: '' }
       })
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 
-export const googleAuth = async (req, res, next) => {
+export const googleAuth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { name, email, image } = req.body
-  console.log('Received data:', { name, email, image }) // Added log
+  console.log('Received data:', { name, email, image })
+
   try {
     const existingUser = await User.findOne({ email: email.toLowerCase() })
 
@@ -105,7 +123,7 @@ export const googleAuth = async (req, res, next) => {
           email: existingUser.email,
           role: existingUser.role
         },
-        process.env.JWT_SECRET,
+        JWT_SECRET!,
         { expiresIn: '1h' }
       )
 
@@ -119,7 +137,7 @@ export const googleAuth = async (req, res, next) => {
         .json({
           success: true,
           message: 'User signed in successfully',
-          data: { ...existingUser._doc, password: '' }
+          data: { ...existingUser, password: '' }
         })
     } else {
       const generatedPassword = Math.random().toString(36).slice(-8)
@@ -130,7 +148,7 @@ export const googleAuth = async (req, res, next) => {
         lastname: name.split(' ')[1],
         email: email.toLowerCase(),
         password: hashedPassword,
-        image: image
+        image
       })
 
       await newUser.save()
@@ -141,7 +159,7 @@ export const googleAuth = async (req, res, next) => {
       })
     }
   } catch (error) {
-    console.log('Error during Google Auth:', error) // Added log
+    console.log('Error during Google Auth:', error)
     res.status(500).json({ success: false, message: 'Internal server error' })
     next(error)
   }

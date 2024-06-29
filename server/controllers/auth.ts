@@ -3,15 +3,8 @@ import User from '@models/user'
 import bcrypt from 'bcryptjs'
 import { errorHandler } from '@utils/error'
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 
-dotenv.config()
-
-const { JWT_SECRET } = process.env
-
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET is not defined in the environment variables.')
-}
+const JWT_SECRET = process.env.JWT_SECRET
 
 interface AuthRequestBody {
   firstname?: string
@@ -98,7 +91,7 @@ export const signIn = async (
       })
       .json({
         message: 'User signed in successfully',
-        data: { ...existingUser, password: '' }
+        data: { ...existingUser._doc, password: '' }
       })
   } catch (error) {
     next(errorHandler(500, 'Internal Server Error'))

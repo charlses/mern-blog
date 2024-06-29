@@ -1,24 +1,14 @@
 import express, { Request, Response, NextFunction } from 'express'
 import mongoose from 'mongoose'
-import dotenv from 'dotenv'
 import UserRoute from '@routes/user'
 import AuthRoute from '@routes/auth'
 import { CustomError } from '@utils/error'
+import cookieParser from 'cookie-parser'
 
-dotenv.config()
-
-const { MONGODB_URI, PORT = 8080, JWT_SECRET } = process.env
-
-if (!MONGODB_URI) {
-  throw new Error('MONGODB_URI is not defined in the environment variables.')
-}
-
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET is not defined in the environment variables.')
-}
+const { MONGODB_URI, PORT } = process.env
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI!)
   .then(() => {
     console.log('Database is connected')
   })
@@ -29,6 +19,7 @@ mongoose
 const app = express()
 
 app.use(express.json())
+app.use(cookieParser())
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)

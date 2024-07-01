@@ -1,26 +1,26 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 //Theme context
-import { ThemeProvider } from './components/theme/theme-provider'
+import { ThemeProvider } from '@/components/theme/theme-provider'
 
 //Pages
-import HomePage from './pages/Home'
-import ProjectsPage from './pages/Projects'
-import DashboardPage from './pages/Dashboard'
-import SignUpPage from './pages/SignUp'
-import SignInPage from './pages/SignIn'
-import AboutPage from './pages/About'
-import ContactPage from './pages/Contact'
-import ServicesPage from './pages/Services'
-import BlogPage from './pages/Blog'
-import ProfilePage from './pages/Profile'
+import HomePage from '@/pages/Home'
+import ProjectsPage from '@/pages/Projects'
+import DashboardPage from '@/pages/Dashboard'
+import SignUpPage from '@/pages/SignUp'
+import SignInPage from '@/pages/SignIn'
+import AboutPage from '@/pages/About'
+import ContactPage from '@/pages/Contact'
+import ServicesPage from '@/pages/Services'
+import BlogPage from '@/pages/Blog'
+import ProfilePage from '@/pages/Profile'
 
 //Global components
-import Header from './components/Header'
-import SettingsPage from './pages/Settings'
-import { Toaster } from './components/ui/sonner'
-import PrivateRoute from './context/private/PrivateRoute'
-import PublicRoute from './context/public/PublicRoute'
+import Header from '@/components/Header'
+import SettingsPage from '@/pages/Settings'
+import { Toaster } from '@/components/ui/sonner'
+import PrivateRoute from '@/context/private/PrivateRoute'
+import PublicRoute from '@/context/public/PublicRoute'
 
 const App = () => {
   return (

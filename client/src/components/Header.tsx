@@ -1,18 +1,18 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/context/store'
 
 //ShadcnUI components
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { ModeToggle } from './theme/mode-toggle'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { ModeToggle } from '@/components/theme/mode-toggle'
 //Icons
 import { Package2, Search, LogInIcon } from 'lucide-react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../context/store'
 //Navigation components
-import AuthedMobileAside from './authed/MobileAside'
-import Aside from './authed/Aside'
-import MobileNav from './MobileNav'
-import UserAvatar from './authed/UserAvatar'
+import AuthedMobileAside from '@/components/authed/MobileAside'
+import Aside from '@/components/authed/Aside'
+import MobileNav from '@/components/MobileNav'
+import UserAvatar from '@/components/authed/UserAvatar'
 
 const Header = () => {
   const path = useLocation().pathname

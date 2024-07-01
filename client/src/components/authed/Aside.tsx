@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from '../ui/tooltip'
+} from '@/components/ui/tooltip'
 
 const Aside = () => {
   const path = useLocation().pathname

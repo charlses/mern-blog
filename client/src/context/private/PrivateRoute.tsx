@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { RootState } from '../store'
+import { RootState } from '@/context/store'
 import { Outlet, Navigate } from 'react-router-dom'
 
 const PrivateRoute = () => {

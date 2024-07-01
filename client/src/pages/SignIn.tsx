@@ -7,16 +7,16 @@ import {
   CardContent,
   CardTitle,
   CardDescription
-} from '../components/ui/card'
-import { Button } from '../components/ui/button'
-import { Input } from '../components/ui/input'
-import { Label } from '../components/ui/label'
-import Loader from '../components/ui/loader'
-import useSignIn from '../hooks/auth/useSignIn'
-import Oauth from '../components/Oauth'
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import Loader from '@/components/ui/loader'
+import useSignIn from '@/hooks/auth/useSignIn'
+import Oauth from '@/components/Oauth'
 
 import { useSelector } from 'react-redux'
-import { RootState } from '../context/store'
+import { RootState } from '@/context/store'
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({

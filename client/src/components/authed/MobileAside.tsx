@@ -4,8 +4,8 @@ import {
   SheetDescription,
   SheetTitle,
   SheetTrigger
-} from '../ui/sheet'
-import { Button } from '../ui/button'
+} from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
 import { Home, LineChart, Newspaper, PanelLeft, Users2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 

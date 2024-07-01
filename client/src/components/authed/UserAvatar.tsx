@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { Button } from '../ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
 } from '../ui/dropdown-menu'
 import { LogOutIcon } from 'lucide-react'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../context/store'
+import { RootState } from '@/context/store'
 
 const UserAvatar = () => {
   const { currentUser } = useSelector((state: RootState) => state.user)

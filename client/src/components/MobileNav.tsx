@@ -1,13 +1,17 @@
+import { Link, useLocation } from 'react-router-dom'
+
+//icons
 import { LogInIcon, Menu, Newspaper, Package2 } from 'lucide-react'
-import { Button } from './ui/button'
+
+//buttons
+import { Button } from '@/components/ui/button'
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
   SheetTrigger
-} from './ui/sheet'
-import { Link, useLocation } from 'react-router-dom'
+} from '@/components/ui/sheet'
 
 const MobileNav = () => {
   const path = useLocation().pathname

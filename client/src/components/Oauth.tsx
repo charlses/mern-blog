@@ -1,10 +1,6 @@
-import { useEffect } from 'react'
-
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
   getAuth,
   GithubAuthProvider
 } from 'firebase/auth'

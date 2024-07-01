@@ -254,3 +254,14 @@ export const githubAuth = async (
     next(errorHandler(500, 'Internal Server Error'))
   }
 }
+
+export const signOut = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res
+      .clearCookie('access_token')
+      .status(200)
+      .json({ success: true, mesasge: 'Use has been signed out' })
+  } catch (error) {
+    next(error)
+  }
+}

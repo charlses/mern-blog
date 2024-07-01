@@ -12,9 +12,11 @@ import {
 import { LogOutIcon } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/context/store'
+import useSignOut from '@/hooks/auth/useSignOut'
 
 const UserAvatar = () => {
   const { currentUser } = useSelector((state: RootState) => state.user)
+  const { signOut } = useSignOut()
   return (
     <>
       {currentUser && (
@@ -71,7 +73,10 @@ const UserAvatar = () => {
               <DropdownMenuItem>Support</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='flex gap-2 font-extralight'>
+            <DropdownMenuItem
+              className='flex gap-2 font-extralight'
+              onClick={signOut}
+            >
               <LogOutIcon className='h-5 w-5' />
               Logout
             </DropdownMenuItem>

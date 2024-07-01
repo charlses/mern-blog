@@ -3,10 +3,10 @@ import { NextFunction, Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import User from '@models/user'
 
-export const test = (req: Request, res: Response) => {
-  res
-    .status(201)
-    .json({ message: 'User created successfully!', data: 'Bla bla bla' })
+export const test = async (req: Request, res: Response) => {
+  const data = await User.find({ email: 'davit.tavadzee@gmail.com' })
+
+  res.status(200).json({ data })
 }
 
 export const updateUser = async (

@@ -51,6 +51,11 @@ const userSlice = createSlice({
     updateFailure: (state, action: PayloadAction<string>) => {
       state.isPending = false
       state.error = action.payload
+    },
+    signOutSuccess: (state) => {
+      state.currentUser = null
+      state.error = null
+      state.isPending = false
     }
   }
 })
@@ -61,7 +66,8 @@ export const {
   signInFailure,
   updateStart,
   updateSuccess,
-  updateFailure
+  updateFailure,
+  signOutSuccess
 } = userSlice.actions
 
 export default userSlice.reducer

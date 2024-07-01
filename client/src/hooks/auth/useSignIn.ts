@@ -65,7 +65,7 @@ const useSignIn = () => {
         return data.data
       }
     } catch (error) {
-      dispatch(signInFailure(error))
+      dispatch(signInFailure(error as string))
       toast.error('Something went wrong', { description: `${error}` })
     }
   }

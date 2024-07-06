@@ -15,7 +15,8 @@ export const useSignOut = () => {
 
       if (data.success === true) {
         dispatch(signOutSuccess())
-        navigate('/', { replace: true })
+        navigate('/sign-in', { replace: true })
+        window.location.reload()
       } else {
         toast.error(data.message)
       }

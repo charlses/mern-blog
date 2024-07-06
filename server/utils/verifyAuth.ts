@@ -10,6 +10,12 @@ declare global {
   }
 }
 
+interface UserPayload {
+  userId: string
+  email: string
+  role: string
+}
+
 export const verifyToken = (
   req: Request,
   res: Response,
@@ -17,17 +23,18 @@ export const verifyToken = (
 ) => {
   const token = req.cookies['access_token']
   if (!token) {
+    console.log('no token found')
     return next(errorHandler(401, 'Unauthorized'))
   }
 
   jwt.verify(
     token,
     process.env.JWT_SECRET!,
-    (err: jwt.VerifyErrors | null, user: any) => {
+    (err: jwt.VerifyErrors | null, decoded: any) => {
       if (err) {
-        next(errorHandler(403, 'Forbidden'))
+        return next(errorHandler(403, 'Forbidden'))
       }
-      req.user! = user
+      req.user = decoded as UserPayload
       next()
     }
   )

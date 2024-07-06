@@ -78,7 +78,7 @@ const UserAvatar = () => {
               onClick={signOut}
             >
               <LogOutIcon className='h-5 w-5' />
-              Logout
+              Sign Out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

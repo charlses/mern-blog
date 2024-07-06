@@ -4,7 +4,16 @@ import bcrypt from 'bcryptjs'
 import { errorHandler } from '@utils/error'
 import jwt from 'jsonwebtoken'
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET!
+
+const setTokenCookie = (res: Response, token: string) => {
+  res.cookie('access_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Set secure to true only in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Use 'lax' in development
+    maxAge: 3600000 // 1 hour
+  })
+}
 
 interface AuthRequestBody {
   firstname?: string
@@ -81,18 +90,11 @@ export const signIn = async (
       JWT_SECRET!,
       { expiresIn: '1h' }
     )
-
-    res
-      .status(200)
-      .cookie('access_token', token, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 3600000
-      })
-      .json({
-        message: 'User signed in successfully',
-        data: { ...existingUser._doc, password: '' }
-      })
+    setTokenCookie(res, token)
+    res.status(200).json({
+      message: 'User signed in successfully',
+      data: { ...existingUser._doc, password: '' }
+    })
   } catch (error) {
     next(errorHandler(500, 'Internal Server Error'))
   }
@@ -119,19 +121,12 @@ export const googleAuth = async (
         JWT_SECRET!,
         { expiresIn: '1h' }
       )
-
-      res
-        .status(200)
-        .cookie('access_token', token, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 3600000
-        })
-        .json({
-          success: true,
-          message: 'User signed in successfully',
-          data: { ...existingUser._doc, password: '' }
-        })
+      setTokenCookie(res, token)
+      res.status(200).json({
+        success: true,
+        message: 'User signed in successfully',
+        data: { ...existingUser._doc, password: '' }
+      })
     } else {
       const generatedPassword = Math.random().toString(36).slice(-8)
       const hashedPassword = await bcrypt.hash(generatedPassword, 12)
@@ -155,18 +150,12 @@ export const googleAuth = async (
         { expiresIn: '1h' }
       )
 
-      res
-        .status(200)
-        .cookie('access_token', token, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 3600000
-        })
-        .json({
-          success: true,
-          message: 'User signed in successfully',
-          data: { ...newUser._doc, password: '' }
-        })
+      setTokenCookie(res, token)
+      res.status(200).json({
+        success: true,
+        message: 'User signed in successfully',
+        data: { ...newUser._doc, password: '' }
+      })
     }
   } catch (error) {
     console.log('Error during Google Auth:', error)
@@ -197,18 +186,13 @@ export const githubAuth = async (
         { expiresIn: '1h' }
       )
 
-      res
-        .status(200)
-        .cookie('access_token', token, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 3600000
-        })
-        .json({
-          success: true,
-          message: 'User signed in successfully',
-          data: { ...existingUser._doc, password: '' }
-        })
+      setTokenCookie(res, token)
+
+      res.status(200).json({
+        success: true,
+        message: 'User signed in successfully',
+        data: { ...existingUser._doc, password: '' }
+      })
     } else {
       const generatedPassword = Math.random().toString(36).slice(-8)
 
@@ -235,19 +219,14 @@ export const githubAuth = async (
         JWT_SECRET!,
         { expiresIn: '1h' }
       )
+
+      setTokenCookie(res, token)
       //sending response with access_token cookie
-      res
-        .status(200)
-        .cookie('access_token', token, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 3600000
-        })
-        .json({
-          success: true,
-          message: 'User signed in successfully',
-          data: { ...newUser._doc, password: '' }
-        })
+      res.status(200).json({
+        success: true,
+        message: 'User signed in successfully',
+        data: { ...newUser._doc, password: '' }
+      })
     }
   } catch (error) {
     console.log('Error during Github Auth:', error)
